@@ -1,0 +1,26 @@
+{
+  "name": "graphql-library",
+  "version": "1.0.0",
+  "description": "Small library backend implemented using GraphQL",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Test not implemented\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrabhakarRai/fullstackopen-part8.git"
+  },
+  "keywords": [
+    "graphQL"
+  ],
+  "author": "Prabhakar Rai",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PrabhakarRai/fullstackopen-part8/issues"
+  },
+  "homepage": "https://github.com/PrabhakarRai/fullstackopen-part8#readme",
+  "dependencies": {
+    "apollo-server": "^2.23.0"
+  }
+}
