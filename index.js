@@ -79,12 +79,54 @@ let books = [
 ]
 
 const typeDefs = gql`
+  type Book {
+    title: String!
+    published: Int!
+    author: String!
+    id: String!
+    genres: [String!]!
+  }
+
+  type Author {
+    name: String!
+    id: String!
+    born: Int
+  }
+
+  type AuthorDetails {
+    name: String!
+    id: String!
+    born: Int
+    bookCount: Int!
+  }
+
   type Query {
+    bookCount: Int!
+    allBooks: [Book!]!
+    authorCount: Int!
+    allAuthors: [AuthorDetails!]!
   }
 `
 
 const resolvers = {
   Query: {
+    bookCount: () => books.length,
+    allBooks: () => books,
+    authorCount: () => authors.length,
+    allAuthors: () => {
+      let authorsDetail = [];
+      authors.forEach((a) => {
+        let bookCount = books.reduce((ttlBooks, book) => {
+          if(book.author === a.name) {
+            return ttlBooks + 1;
+          }
+          return ttlBooks;
+        }, 0);
+        let authorDetail = { ...a, bookCount }
+        authorsDetail.push(authorDetail);
+      })
+      return authorsDetail;
+    }
   }
 }
 
