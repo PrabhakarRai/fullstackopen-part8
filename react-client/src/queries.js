@@ -34,3 +34,38 @@ query findBooksbyAuthor($nameToSearch: String!) {
   }
 }
 `
+
+export const ADD_BOOK = gql`
+mutation addBook(
+    $title: String!,
+    $published: Int!,
+    $author: String!,
+    $genres: [String!]!
+  ) {
+    addBook(
+      title: $title,
+      published: $published,
+      author: $author,
+      genres: $genres,
+    ) {
+      title,
+      published,
+      author,
+      id,
+      genres,
+    }
+}
+`
+
+export const SET_BORN_YEAR = gql`
+mutation setBornYear(
+  $name: String!,
+  $born: Int!
+) {
+  editAuthor(name: $name, setBornTo: $born) {
+    name,
+    id,
+    born
+  }
+}
+`
