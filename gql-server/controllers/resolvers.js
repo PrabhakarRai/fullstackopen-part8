@@ -30,41 +30,22 @@ const resolvers = {
       //     }
       //   })
       // }
-      return Book.find({});
+      return Book.find({}).populate('author', { name: 1, born: 1 });
     },
     authorCount: () => Author.estimatedDocumentCount(),
     allAuthors: () => {
-      // let authorsDetail = [];
-      // authors.forEach((a) => {
-      //   let bookCount = books.reduce((ttlBooks, book) => {
-      //     if(book.author === a.name) {
-      //       return ttlBooks + 1;
-      //     }
-      //     return ttlBooks;
-      //   }, 0);
-      //   let authorDetail = { ...a, bookCount }
-      //   authorsDetail.push(authorDetail);
-      // })
-      // return authorsDetail;
       return Author.find({});
     }
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() };
-      books = books.concat(book);
-      let authorInDb = false;
-      for (a of authors) {
-        if (a.name === book.author) {
-          authorInDb = true;
-          break;
-        }
+    addBook: async (root, args) => {
+      let author = await Author.findOne({ name: args.author });
+      if (!author) {
+        author = new Author({ name: args.author });
+        author = await author.save();
       }
-      if (!authorInDb) {
-        const newAuthor = { name: book.author, id: uuid() }
-        authors = authors.concat(newAuthor);
-      }
-      return book;
+      const book = new Book({ ...args, author: author._id });
+      return (await book.save()).populate('author', {name: 1, born: 1}).execPopulate();
     },
     editAuthor: (root, args) => {
       const author = authors.find((a) => a.name === args.name);
