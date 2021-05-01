@@ -5,6 +5,7 @@ const typeDefs = gql`
     name: String!
     id: ID!
     born: Int
+    bookCount: Int!
   }
 
   type Book {
@@ -15,17 +16,11 @@ const typeDefs = gql`
     genres: [String!]!
   }
 
-  type AuthorDetails {
-    name: String!
-    id: String!
-    born: Int
-  }
-
   type Query {
     bookCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     authorCount: Int!
-    allAuthors: [AuthorDetails!]!
+    allAuthors: [Author!]!
   }
 
   type Mutation {
