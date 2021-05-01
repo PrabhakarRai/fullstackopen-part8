@@ -1,18 +1,18 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
+  type Author {
+    name: String!
+    id: ID!
+    born: Int
+  }
+
   type Book {
     title: String!
     published: Int!
-    author: String!
-    id: String!
+    author: Author!
+    id: ID!
     genres: [String!]!
-  }
-
-  type Author {
-    name: String!
-    id: String!
-    born: Int
   }
 
   type AuthorDetails {

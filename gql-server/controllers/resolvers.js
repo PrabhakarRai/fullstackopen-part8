@@ -1,48 +1,52 @@
 const { v1: uuid } = require('uuid');
+const { count } = require('../models/author');
+const Author = require('../models/author');
+const Book = require('../models/book');
 const { authors, books } = require('../utils/dummyData')
 
 const resolvers = {
   Query: {
-    bookCount: () => books.length,
+    bookCount: () => Book.estimatedDocumentCount(),
     allBooks: (root, args) => {
-      if (args.author !== undefined && args.genre !== undefined) {
-        const booksByAuthor = books.filter((b) => b.author === args.author)
-        return booksByAuthor.filter((b) => {
-          for (genre of b.genres) {
-            if (genre === args.genre) {
-              return true;
-            }
-          }
-        })
-      }
-      if (args.author !== undefined) {
-        return books.filter((b) => b.author === args.author)
-      }
-      if (args.genre !== undefined) {
-        return books.filter((b) => {
-          for (genre of b.genres) {
-            if (genre === args.genre) {
-              return true;
-            }
-          }
-        })
-      }
-      return books
+      // if (args.author !== undefined && args.genre !== undefined) {
+      //   const booksByAuthor = books.filter((b) => b.author === args.author)
+      //   return booksByAuthor.filter((b) => {
+      //     for (genre of b.genres) {
+      //       if (genre === args.genre) {
+      //         return true;
+      //       }
+      //     }
+      //   })
+      // }
+      // if (args.author !== undefined) {
+      //   return books.filter((b) => b.author === args.author)
+      // }
+      // if (args.genre !== undefined) {
+      //   return books.filter((b) => {
+      //     for (genre of b.genres) {
+      //       if (genre === args.genre) {
+      //         return true;
+      //       }
+      //     }
+      //   })
+      // }
+      return Book.find({});
     },
-    authorCount: () => authors.length,
+    authorCount: () => Author.estimatedDocumentCount(),
     allAuthors: () => {
-      let authorsDetail = [];
-      authors.forEach((a) => {
-        let bookCount = books.reduce((ttlBooks, book) => {
-          if(book.author === a.name) {
-            return ttlBooks + 1;
-          }
-          return ttlBooks;
-        }, 0);
-        let authorDetail = { ...a, bookCount }
-        authorsDetail.push(authorDetail);
-      })
-      return authorsDetail;
+      // let authorsDetail = [];
+      // authors.forEach((a) => {
+      //   let bookCount = books.reduce((ttlBooks, book) => {
+      //     if(book.author === a.name) {
+      //       return ttlBooks + 1;
+      //     }
+      //     return ttlBooks;
+      //   }, 0);
+      //   let authorDetail = { ...a, bookCount }
+      //   authorsDetail.push(authorDetail);
+      // })
+      // return authorsDetail;
+      return Author.find({});
     }
   },
   Mutation: {
