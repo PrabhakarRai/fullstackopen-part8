@@ -39,7 +39,7 @@ query getBooksByGenre {
 }
 
 query getBooksByAuthor {
-  allBooks(author: "Prabhakar Rai") {
+  allBooks(author: "Bhide") {
     id,
     title,
     author {
@@ -82,7 +82,7 @@ query getAllAuthors {
 
 mutation addBook {
   addBook(
-    title: "New Non Mealthy Lifestyle",
+    title: "New Non Mealthy Lifestyle Awesome",
     published: 2019,
     author: "Bhide",
     genres: ["health", "yoga"]
@@ -109,5 +109,40 @@ mutation editBornYearOfAuthor {
     bookCount,
     id
   }
+}
+
+query whoIsMe {
+  me {
+    username,
+    favoriteGenre,
+    id
+  }
+}
+
+mutation createUser {
+  createUser(
+    username: "root",
+    favoriteGenre: "hacking",
+  ) {
+    username,
+    favoriteGenre,
+    id
+  }
+}
+
+mutation login {
+  login(
+    username: "root",
+    password: "topsecret",
+  ) {
+    value
+  }
+}
+```
+
+## Authorization Header Required for Mutations
+```
+{
+  "Authorization": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJmYXZvcml0ZUdlbnJlIjoiaGFja2luZyIsImlkIjoiNjA4ZDdjZTMwNWY0ZjQwNDE0MWNmMzIzIiwiaWF0IjoxNjE5ODg2MjI3fQ.BGkZCegAJ6EML5no7KQhyA2ixrrRqx7LWwjOJkdkbZM"
 }
 ```
