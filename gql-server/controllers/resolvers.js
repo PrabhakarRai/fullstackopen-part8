@@ -1,8 +1,6 @@
-const { v1: uuid } = require('uuid');
-const { count } = require('../models/author');
+const { UserInputError } = require('apollo-server');
 const Author = require('../models/author');
 const Book = require('../models/book');
-const { authors, books } = require('../utils/dummyData')
 
 const resolvers = {
   Query: {
@@ -44,13 +42,25 @@ const resolvers = {
       let author = await Author.findOne({ name: args.author });
       if (!author) {
         author = new Author({ name: args.author, bookCount: 1 });
-        author = await author.save();
       } else {
-        author.bookCount += 1,
-        author = await author.save();
+        author.bookCount += 1;
       }
-      const book = new Book({ ...args, author: author._id });
-      return (await book.save())
+      try {
+        author = await author.save();
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        });
+      }
+      let book = new Book({ ...args, author: author._id });
+      try {
+        book = await book.save();
+      } catch (error) {
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        });
+      }
+      return book
         .populate('author', { name: 1, born: 1, bookCount: 1 })
         .execPopulate();
     },
