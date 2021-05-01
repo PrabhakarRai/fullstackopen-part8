@@ -1,3 +1,6 @@
+## Deployed at
+[Heroku](https://gql-prrai.herokuapp.com/)
+
 ## Sample Queries
 ```
 query getBookCount {
