@@ -2,11 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from '@apollo/client';
 import { ALL_AUTHORS, SET_BORN_YEAR } from '../queries';
 
-const AuthorBirthYearUpdate = ({ authors }) => {
+const AuthorBirthYearUpdate = ({ authors, setError }) => {
   const [born, setBorn] = useState('');
   const [selectedAuthor, setSelectedAuthor] = useState(authors[0].name);
   const [ updateBirthYear ] = useMutation(SET_BORN_YEAR, {
     refetchQueries: [ { query: ALL_AUTHORS }],
+    onError: (err) => {
+      console.log(err.graphQLErrors[0].message);
+      setError(err.graphQLErrors[0].message);
+    }
   })
   const submit = (e) => {
     e.preventDefault();
@@ -51,7 +55,7 @@ const AuthorBirthYearUpdate = ({ authors }) => {
   )
 }
 
-const Authors = (props) => {
+const Authors = ({ show, setError }) => {
   const [authors, setAuthors] = useState(null);
   const result = useQuery(ALL_AUTHORS);
 
@@ -61,7 +65,7 @@ const Authors = (props) => {
     }
   }, [result]);
 
-  if (!props.show) {
+  if (!show) {
     return null
   };
 
@@ -99,7 +103,7 @@ const Authors = (props) => {
             )}
           </tbody>
         </table>
-        <AuthorBirthYearUpdate authors={authors} />
+        <AuthorBirthYearUpdate authors={authors} setError={setError} />
       </div>
     )
   }

@@ -4,12 +4,23 @@ import App from './App';
 import {
   ApolloClient, HttpLink, InMemoryCache, ApolloProvider
 } from '@apollo/client';
+import { setContext } from 'apollo-link-context'
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem('library-user-token');
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `bearer ${token}` : null,
+    }
+  }
+});
+
+const httpLink = new HttpLink({ uri: 'https://gql-prrai.herokuapp.com' });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: new HttpLink({
-    uri: 'https://gql-prrai.herokuapp.com',
-  }),
+  link: authLink.concat(httpLink),
 });
 
 ReactDOM.render(
