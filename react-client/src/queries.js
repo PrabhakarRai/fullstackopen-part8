@@ -45,6 +45,33 @@ query findBooksbyAuthor($nameToSearch: String!) {
 }
 `
 
+export const FIND_BOOKS_BY_GENRE = gql`
+query findBooksbyGenre($genreToSearch: String!) {
+  allBooks(genre: $genreToSearch) {
+    id,
+    title,
+    author {
+      id,
+      name,
+      born,
+      bookCount
+    },
+    published,
+    genres
+  }
+}
+`
+
+export const WHO_IS_ME = gql`
+query whoIsMe {
+  me {
+    username,
+    favoriteGenre,
+    id
+  }
+}
+`
+
 export const ADD_BOOK = gql`
 mutation addBook(
     $title: String!,
@@ -96,4 +123,5 @@ mutation login(
   ) {
     value
   }
-}`
+}
+`
