@@ -5,9 +5,14 @@ query {
   allBooks {
     id,
     title,
-    author,
-    genres,
+    author {
+      id,
+      name,
+      born,
+      bookCount
+    },
     published,
+    genres
   }
 }
 `
@@ -28,9 +33,14 @@ query findBooksbyAuthor($nameToSearch: String!) {
   allBooks(author: $nameToSearch) {
     id,
     title,
+    author {
+      id,
+      name,
+      born,
+      bookCount
+    },
     published,
-    author,
-    genres,
+    genres
   }
 }
 `
@@ -50,7 +60,11 @@ mutation addBook(
     ) {
       title,
       published,
-      author,
+      author {
+        name,
+        born,
+        bookCount
+      },
       id,
       genres,
     }
@@ -65,7 +79,8 @@ mutation setBornYear(
   editAuthor(name: $name, setBornTo: $born) {
     name,
     id,
-    born
+    born,
+    bookCount,
   }
 }
 `
