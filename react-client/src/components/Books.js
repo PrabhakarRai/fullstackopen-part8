@@ -14,7 +14,7 @@ const Books = (props) => {
 
 
   if (!props.show) {
-    return null
+    return null;
   };
 
   if (result.loading) {
@@ -45,7 +45,7 @@ const Books = (props) => {
             {books.map(a =>
               <tr key={a.id}>
                 <td>{a.title}</td>
-                <td>{a.author.name}</td>
+                <td>{a.author.name}</td> // 8.17
                 <td>{a.published}</td>
               </tr>
             )}
