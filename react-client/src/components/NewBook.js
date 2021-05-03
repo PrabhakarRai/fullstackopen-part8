@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { ALL_AUTHORS, ALL_BOOKS, ADD_BOOK } from '../queries';
+import { ALL_AUTHORS, ALL_BOOKS, ADD_BOOK, FIND_BOOKS_BY_GENRE } from '../queries';
 
-const NewBook = ({ show, setError }) => {
+const NewBook = ({ show, setError, userData, getRecBooks }) => {
   const [title, setTitle] = useState('');
   const [author, setAuhtor] = useState('');
   const [published, setPublished] = useState('');
@@ -10,10 +10,16 @@ const NewBook = ({ show, setError }) => {
   const [genres, setGenres] = useState([]);
 
   const [ createBook ] = useMutation(ADD_BOOK, {
-    refetchQueries: [ { query: ALL_BOOKS }, { query: ALL_AUTHORS } ],
     onError: (err) => {
       console.log(err.graphQLErrors[0].message);
       setError(err.graphQLErrors[0].message);
+    },
+    onCompleted: () => {
+      getRecBooks({
+        variables: {
+          genreToSearch: userData.favoriteGenre,
+        },
+      });
     }
   });
 
@@ -23,14 +29,39 @@ const NewBook = ({ show, setError }) => {
 
   const submit = async (event) => {
     event.preventDefault();
-    createBook({
-      variables: {
-        title,
-        author,
-        genres,
-        published: Number(published),
-      }
-    });
+    if (genres.length > 0) {
+      createBook({
+        variables: {
+          title,
+          author,
+          genres,
+          published: Number(published),
+        },
+        refetchQueries: [
+          { query: ALL_BOOKS },
+          { query: ALL_AUTHORS },
+          {
+            query: FIND_BOOKS_BY_GENRE,
+            variables: {
+              genreToSearch: userData.favoriteGenre,
+            },
+          }
+        ],
+      });
+    } else {
+      createBook({
+        variables: {
+          title,
+          author,
+          genres,
+          published: Number(published),
+        },
+        refetchQueries: [
+          { query: ALL_BOOKS },
+          { query: ALL_AUTHORS },
+        ],
+      });
+    }
 
     setTitle('');
     setPublished('');

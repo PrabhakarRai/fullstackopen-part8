@@ -84,6 +84,8 @@ const App = () => {
       <NewBook
         show={page === 'add_book'}
         setError={setErrorMessage}
+        userData={userData}
+        getRecBooks={getRecBooks}
       />
       <Login
         show={page === 'login'}
