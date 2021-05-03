@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { LOGIN_USER } from '../queries';
 
-const Login = ({ show, setToken, setError, setPage }) => {
+const Login = ({ show, setToken, setError, setPage, getUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [ loginUser, result ] = useMutation(LOGIN_USER, {
+  const [ loginUser ] = useMutation(LOGIN_USER, {
     onError: (err) => {
-      console.log(err.graphQLErrors[0].message);
-      setError(err.graphQLErrors[0].message);
+      console.log(err.message);
+      setError(err.message);
     },
-    onCompleted: () => {
+    onCompleted: (result) => {
+      const token = result.login.value;
+      localStorage.setItem('library-user-token', token);
+      setToken(token);
       setPage('authors');
+      getUser();
     }
   });
 
@@ -28,13 +32,13 @@ const Login = ({ show, setToken, setError, setPage }) => {
     setPassword('');
   };
 
-  useEffect(() => {
-    if ( result.data ) {
-      const token = result.data.login.value;
-      localStorage.setItem('library-user-token', token);
-      setToken(token);
-    }
-  }, [result.data]) // eslint-disable-line
+  // useEffect(() => {
+  //   if ( result.data ) {
+  //     const token = result.data.login.value;
+  //     localStorage.setItem('library-user-token', token);
+  //     setToken(token);
+  //   }
+  // }, [result]) // eslint-disable-line
 
   if (!show) {
     return null
