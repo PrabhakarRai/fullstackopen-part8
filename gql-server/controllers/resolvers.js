@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { UserInputError, AuthenticationError } = require('apollo-server');
+const { UserInputError, AuthenticationError, PubSub } = require('apollo-server');
+const pubsub = PubSub();
 const Author = require('../models/author');
 const Book = require('../models/book');
 const User = require('../models/user');
@@ -69,9 +70,11 @@ const resolvers = {
           invalidArgs: args,
         });
       }
-      return book
+      const addedBook = await book
         .populate('author', { name: 1, born: 1, bookCount: 1 })
         .execPopulate();
+      pubsub.publish('BOOK_ADDED', { bookAdded: addedBook})
+      return addedBook;
     },
     editAuthor: async (root, args, { currentUser }) => {
       if (!currentUser) {
@@ -111,7 +114,12 @@ const resolvers = {
   
       return { value: jwt.sign(userForToken, SECRET) }
     }
-  }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED']),
+    },
+  },
 }
 
 module.exports = resolvers;
