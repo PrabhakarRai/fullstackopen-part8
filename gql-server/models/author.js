@@ -11,7 +11,7 @@ const schema = new mongoose.Schema({
   born: {
     type: Number,
   },
-  bookCount: {
+  bookCount: { // Fixing n+1 problem
     type: Number,
     required: true,
     min: 0,
