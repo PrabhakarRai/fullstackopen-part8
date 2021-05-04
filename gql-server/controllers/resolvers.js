@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 const { UserInputError, AuthenticationError, PubSub } = require('apollo-server');
-const pubsub = PubSub();
 const Author = require('../models/author');
 const Book = require('../models/book');
 const User = require('../models/user');
 const { SECRET } = require('../utils/config');
+
+const pubsub = new PubSub();
 
 const resolvers = {
   Query: {
